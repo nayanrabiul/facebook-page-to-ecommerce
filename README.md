@@ -22,3 +22,10 @@ The MCP server will read data from Facebook, create categories, and generate pro
 * **3️⃣ Data Manager:** Stores all data and connects it to the frontend.
 * **4️⃣ Product Generator:** Automatically creates products from the collected data.
 
+
+## WOrk flow
+
+form the frotend ( astro using react ), user paste the page url, and the backend ( also the astro api) dynamically talk with the apps/mcp server, and the mcp server do the rest of the job
+
+both use the common packages/db to store data.
+
