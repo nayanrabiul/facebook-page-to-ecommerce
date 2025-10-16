@@ -1,24 +1,135 @@
-### এটি এমন একটি প্রজেক্ট, যেখানে একটি ফেসবুক পেজকে ব্যবহার করে একটি সম্পূর্ণ **ই-কমার্স ওয়েবসাইট** তৈরি করা হবে।  
+# Turborepo starter
 
-বাংলাদেশে অনেকেই ফেসবুক পেজ ব্যবহার করে অনলাইনে ব্যবসা চালায় — তারা তাদের পণ্য ফেসবুক পোস্টের মাধ্যমে আপলোড করে।  এই প্রজেক্টের লক্ষ্য হলো, ওই পেজের সব প্রোডাক্ট, পোস্ট, এবং তথ্যগুলোকে স্ট্রাকচার্ড  ভাবে নিয়ে এসে একটি সম্পূর্ণ ওয়েবসাইটে রূপান্তর করা — যেখানে সব কিছু ক্যাটাগরি অনুযায়ী সাজানো থাকবে।
+This Turborepo starter is maintained by the Turborepo core team.
 
-##  ব্যবহারকারীর কর্ম প্রবাহ নিম্নরূপ হবে
+## Using this example
 
-১. প্রথমে, একজন ব্যবহারকারী একটি **ফেসবুক পেজ লিংক** দেবে।  
-২. আমাদের সিস্টেম  **MCP সার্ভার** ( যেটা আমরা ডেভেলপ করব) এর মাদ্ধমে ওই পেজ থেকে প্রথম **১০০টি পোস্ট** সংগ্রহ করবে।  
-৩. এই পোস্টগুলো বিশ্লেষণ করে দেখা হবে, কোনটা কোন ধরনের প্রোডাক্ট — যেমন পোশাক, ইলেকট্রনিক্স, কসমেটিকস ইত্যাদি।  
-৪. এরপর এই ডেটাগুলো থেকে স্বয়ংক্রিয়ভাবে **ক্যাটাগরি তৈরি** করা হবে।  
-৫. প্রতিটি ক্যাটাগরির ভেতরে থাকবে সংশ্লিষ্ট প্রোডাক্টগুলোর তথ্য — যেমন নাম, দাম, ছবি, বিবরণ ইত্যাদি।  
-৬. সবশেষে, এই সাজানো ডেটাগুলো থেকেই তৈরি হবে একটি সুন্দর **ই-কমার্স ওয়েবসাইট**
+Run the following command:
 
+```sh
+npx create-turbo@latest
+```
 
-##  সিস্টেমের গঠন
+## What's inside?
 
-এই ফাংশনগুলো বেসিক্যালি এমসিপি সার্ভার উপর ডিপেন্ড করবে। এমসিপি সার্ভার বেসিক্যালি ফেসবুক থেকে ডাটা রিড করবে, ক্যাটাগরি তৈরি করবে, প্রোডাক্ট বানাবে, ক্যাটাগরির আন্ডারে।
+This Turborepo includes the following packages/apps:
 
-- **১️⃣ ফেসবুক রিডার টুল:** পেজ থেকে প্রথম ১০০টি পোস্ট পড়বে।
-- **৩️⃣ ডেটা ম্যানেজার :** সব ডেটা সেভ রাখবে এবং ফ্রন্টএন্ডের সাথে সংযোগ করবে।
-- **২️⃣ ক্যাটাগরি অ্যানালাইজার:** পোস্টগুলোর কনটেন্ট দেখে বুঝবে কোন ক্যাটাগরিতে যাবে।
-- **৪️⃣ প্রোডাক্ট:** সংগৃহীত ডেটা থেকে স্বয়ংক্রিয়ভাবে প্রডাক্ট তৈরি করবে।
+### Apps and Packages
 
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+
+### Utilities
+
+This Turborepo has some additional tools already setup for you:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### Build
+
+To build all apps and packages, run the following command:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build
+yarn dlx turbo build
+pnpm exec turbo build
+```
+
+You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo build --filter=docs
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo build --filter=docs
+yarn exec turbo build --filter=docs
+pnpm exec turbo build --filter=docs
+```
+
+### Develop
+
+To develop all apps and packages, run the following command:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev
+yarn exec turbo dev
+pnpm exec turbo dev
+```
+
+You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo dev --filter=web
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo dev --filter=web
+yarn exec turbo dev --filter=web
+pnpm exec turbo dev --filter=web
+```
+
+### Remote Caching
+
+> [!TIP]
+> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+
+Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+
+```
+cd my-turborepo
+
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo login
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo login
+yarn exec turbo login
+pnpm exec turbo login
+```
+
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+
+```
+# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+turbo link
+
+# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
+npx turbo link
+yarn exec turbo link
+pnpm exec turbo link
+```
+
+## Useful Links
+
+Learn more about the power of Turborepo:
+
+- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
+- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
+- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
+- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
+- [Configuration Options](https://turborepo.com/docs/reference/configuration)
+- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
