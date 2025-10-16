@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2020",
     "module": "commonjs",
     "outDir": "dist",
     "rootDir": "src",
-    "declaration": true,
-    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "db": ["../../packages/db/src"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

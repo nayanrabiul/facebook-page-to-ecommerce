@@ -1,26 +1,6 @@
 {
-  "products": [
-    {
-      "id": 1,
-      "name": "Product 1",
-      "price": 100,
-      "category": "Category 1"
-    },
-    {
-      "id": 2,
-      "name": "Product 2",
-      "price": 200,
-      "category": "Category 2"
-    }
-  ],
-  "categories": [
-    {
-      "id": 1,
-      "name": "Category 1"
-    },
-    {
-      "id": 2,
-      "name": "Category 2"
-    }
-  ]
+  "store": null,
+  "products": [],
+  "categories": [],
+  "lastSyncedAt": null
 }

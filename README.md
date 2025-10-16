@@ -1,31 +1,110 @@
-### This is a project where a **complete e-commerce website** will be created using a Facebook page.
+## Facebook Page ➝ Ecommerce Storefront
 
-In Bangladesh, many people run online businesses using Facebook pages — they upload their products through Facebook posts.
-The goal of this project is to take all the products, posts, and information from such a page, organize them in a structured way, and transform them into a complete website — where everything will be categorized properly.
+Transform a public Facebook page feed into a browsable ecommerce experience. The workspace is split into focused services that cooperate through a shared data package.
 
-## User Workflow
+### Architecture
+- **apps/mcp** – ETL service (`POST /transform`) that ingests Facebook posts, categorises merchandise, generates product records, and persists to the shared `packages/db`.
+- **packages/db** – File-backed catalogue module (`db.json`) with typed helpers for reading/writing store metadata, categories, and products.
+- **apps/products-api** – REST facade (port `3001`) exposing `/catalog`, `/products`, `/categories`, and `/store` endpoints for frontend consumption.
+- **apps/client** – Astro + React storefront (port `4321`) with a sync form, category filters, and product grid fed by the products API and Astro server hooks.
 
-1. First, a user will provide a **Facebook page link**.
-2. Our system, through an **MCP server** (which we will develop), will collect the first **100 posts** from that page.
-3. These posts will be analyzed to determine what type of product each one represents — such as clothing, electronics, cosmetics, etc.
-4. Based on this data, the system will automatically **create categories**.
-5. Inside each category, there will be relevant product information — such as name, price, image, and description.
-6. Finally, using this organized data, a beautiful **e-commerce website** will be generated.
+Data flow:
+`Facebook page URL → MCP /transform → packages/db/db.json → products API → Astro UI`.
 
-## System Structure
+### Prerequisites
+- Node.js v18+
+- pnpm v9 (or adapt the commands to npm/yarn manually)
 
-These functions will basically depend on the **MCP server**.
-The MCP server will read data from Facebook, create categories, and generate products under those categories.
+### One-Time Setup
+```bash
+pnpm install
+pnpm --filter db build      # emits dist/ + type declarations for the shared package
+```
 
-* **1️⃣ Facebook Reader Tool:** Reads the first 100 posts from the page.
-* **2️⃣ Category Analyzer:** Determines which category each post belongs to based on its content.
-* **3️⃣ Data Manager:** Stores all data and connects it to the frontend.
-* **4️⃣ Product Generator:** Automatically creates products from the collected data.
+### Running the Stack (3 terminals)
+1. **MCP pipeline (port 3002)**
+   ```bash
+   pnpm --filter mcp start
+   ```
+2. **Products API (port 3001)**
+   ```bash
+   pnpm --filter products-api dev
+   ```
+   Optional env: `CORS_ORIGIN=http://localhost:4321`
 
+3. **Astro storefront (port 4321)**
+   ```bash
+   PUBLIC_PRODUCTS_API=http://localhost:3001 pnpm --filter web dev
+   ```
+   Optional env: `MCP_URL=http://localhost:3002` (defaults already align with local ports).
 
-## WOrk flow
+### Syncing a Facebook Page
+1. Open http://localhost:4321 after all services are running.
+2. Paste a Facebook page URL into the **Sync Facebook Page** form and submit.
+3. The Astro backend calls `/api/transform`, which proxies to the MCP service. The MCP pipeline:
+   - Generates up to 100 mock posts (ready for real API integration).
+   - Classifies posts into merchandising categories.
+   - Extracts pricing/hashtags and writes enriched products + store metadata to `db.json`.
+4. The products API immediately serves the updated catalogue; the UI refreshes with the new cards.
 
-form the frotend ( astro using react ), user paste the page url, and the backend ( also the astro api) dynamically talk with the apps/mcp server, and the mcp server do the rest of the job
+#### Direct API calls
+Trigger a sync without the UI:
+```bash
+curl -X POST http://localhost:3002/transform \
+  -H "Content-Type: application/json" \
+  -d '{"page_url":"https://www.facebook.com/example-page"}'
+```
+Fetch the generated catalogue:
+```bash
+curl http://localhost:3001/catalog | jq
+```
 
-both use the common packages/db to store data.
+### REST Surfaces
+- **MCP**: `POST /transform` (`page_url`, optional `display_name`, `description`, `custom_categories`, `post_limit`, `language`)
+- **Products API**:
+  - `GET /catalog` – entire dataset payload
+  - `GET /products?categoryId=&search=&limit=` – filtered feed
+  - `GET /products/:id` – single product
+  - `GET /categories` – category summary
+  - `GET /store` – current store metadata
 
+### Shared Data Schema (`packages/db`)
+```ts
+interface StoreMetadata {
+  pageUrl: string;
+  displayName: string;
+  description: string;
+  lastSyncedAt: string;
+  totalProducts: number;
+  totalCategories: number;
+}
+
+interface ProductRecord {
+  id: string;
+  title: string;
+  description: string;
+  price: number | null;
+  currency: string;
+  categoryId: string;
+  categoryName: string;
+  imageUrls: string[];
+  tags: string[];
+  availability: 'in_stock' | 'out_of_stock' | 'preorder';
+  sourcePostId: string;
+  sourcePostUrl?: string;
+  publishedAt: string;
+}
+
+interface CategoryRecord {
+  id: string;
+  name: string;
+  productCount: number;
+  keywords: string[];
+}
+```
+
+### Development Notes
+- Re-run `pnpm --filter db build` after editing `packages/db/src`.
+- Update `PUBLIC_PRODUCTS_API` if the products service runs on a different host/port.
+- The Facebook reader currently emits curated mock posts; replace `apps/mcp/src/facebook_page_reader.ts` with a real Graph API integration when credentials are available.
+- New services should import types from `'db'` using `import type` to avoid bundling filesystem code into client builds.

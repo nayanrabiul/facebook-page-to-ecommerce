@@ -1,11 +1,10 @@
 ---
-import ProductList from '../components/ProductList';
 import Layout from '../layouts/Layout.astro';
+import Storefront from '../components/Storefront';
 ---
 
 <Layout>
-	<main class="container mx-auto py-8">
-		<h1 class="text-3xl font-bold mb-8">Products</h1>
-		<ProductList client:load />
+	<main class="container mx-auto max-w-6xl py-10">
+		<Storefront client:load />
 	</main>
 </Layout>

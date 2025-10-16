@@ -4,6 +4,10 @@
     "module": "commonjs",
     "outDir": "dist",
     "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "db": ["../../packages/db/src"]
+    },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
